@@ -455,71 +455,51 @@ function mostrarTreino(){
   const aluno = document.getElementById("aluno").value;
   const dia = document.getElementById("dia").value;
   const tabela = document.getElementById("tabelaTreino");
+  const visor = document.querySelector("#visor_exercicio ul");
 
   tabela.innerHTML = "";
+  visor.innerHTML = ""; // ✅ fora do loop
 
   if(treinos[aluno] && treinos[aluno][dia]){
 
     const exercicios = treinos[aluno][dia];
-    var ada = exercicios
-    exercicios.forEach(ex => {
+
+    exercicios.forEach((ex, index) => {
+
+      estadoExercicios[index] = {
+        ativo: false,
+        inicio: null,
+        intervalo: null,
+        descansoTotal: tempoParaSegundos(ex.descanso),
+        descansoRestante: 0,
+        descansoIntervalo: null
+      };
 
       tabela.innerHTML += `
-      <li>${ex.grupoMuscular}</li>
-      <tr>
-        <td>${ex.exercicio}</td>
-        <td>${ex.variacao}</td>
-        <td>${ex.series}</td>
-        <td>${ex.reps}</td>
-        <td>${ex.descanso}</td>
-      </tr>
+        <tr>
+          <td>${ex.exercicio}</td>
+          <td>${ex.variacao}</td>
+          <td>${ex.series}</td>
+          <td>${ex.reps}</td>
+          <td>${ex.descanso}</td>
+        </tr>
       `;
-      
-      const visor_exercicio = document.querySelector("#visor_exercicio ul");
-visor_exercicio.innerHTML = "";
 
-
-function tempoParaSegundos(desc){
-  if(desc.includes("min")){
-    return parseInt(desc) * 60;
-  }
-  if(desc.includes("s")){
-    return parseInt(desc);
-  }
-  return 60; // padrão
-}
-
-exercicios.forEach((ex, index) => {
-
-        estadoExercicios[index] = {
-          ativo: false,
-          inicio: null,
-          intervalo: null,
-          descansoTotal: tempoParaSegundos(ex.descanso),
-          descansoRestante: 0,
-          descansoIntervalo: null
-        };
-
-        visor_exercicio.innerHTML += `
-          <li class="li_gpm">${ex.grupoMuscular || ""}</li>
-
-          <li class="li_ex" onclick="toggleEx(${index}, this)">
-            <span>${ex.exercicio}</span>
-            <span>${ex.series} x ${ex.reps}</span>
-            <span id="timer-${index}">0s</span>
-            <span id="descanso-${index}">--</span>
-            
-          </li>
-        `;
-      });
+      visor.innerHTML += `
+        <li class="li_ex" onclick="toggleEx(${index}, this)">
+          <span>${ex.exercicio}</span>
+          <span>${ex.series}x${ex.reps}</span>
+          <span id="timer-${index}">0s</span>
+          <span id="descanso-${index}">--</span>
+        </li>
+      `;
     });
-    document.getElementById("nome_aluno").innerText = aluno.toUpperCase() + "  -  " + dia.toUpperCase()
 
-  }else{
-    window.alert("treino nao encontrado")
+  } else {
+    alert("treino nao encontrado");
   }
-
 }
+
 function atualizarMediaSession(exercicio, index){
   if ('mediaSession' in navigator) {
 
@@ -612,6 +592,26 @@ function iniciarDescanso(index, elemento){
 
   }, 1000);
 }
+
+async function pedirPermissao(){
+  if ("Notification" in window) {
+    const perm = await Notification.requestPermission();
+    console.log("Permissão:", perm);
+  }
+}
+
+function notificar(titulo, corpo){
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification(titulo, {
+        body: corpo,
+        icon: "icon-192.png",
+        vibrate: [200,100,200]
+      });
+    });
+  }
+}
+pedirPermissao();
 
 const estados = {}
 
