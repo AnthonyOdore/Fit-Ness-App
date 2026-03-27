@@ -226,7 +226,46 @@
     </style>
 </head>
 <body class="oswald dayMode">
-  <h6>versao 1.1.2</h6>
+  <h6>versao 1.1.3</h6>
+
+  <div id="menu">
+  <button onclick="mostrarAba('treino')">Treino</button>
+  <button onclick="mostrarAba('editar')">Editar</button>
+  <ul id="editLista"></ul>
+</div>
+<div id="abaTreino">
+  <!-- seu conteúdo atual -->
+</div>
+<div id="abaEditar" style="display:none">
+
+  <h3>Editar Treino</h3>
+
+  Aluno:
+  <select id="editAluno">
+    <option value="anthony">Anthony</option>
+  </select>
+
+  Treino:
+  <select id="editDia">
+    <option value="A">A</option>
+    <option value="B">B</option>
+  </select>
+
+  <br><br>
+
+  Exercício: <input id="nome"><br>
+  Grupo: <input id="grupoEx"><br>
+  Séries: <input id="series"><br>
+  Reps: <input id="reps"><br>
+  Descanso: <input id="desc" placeholder="60s"><br>
+
+  <button onclick="addEx()">Adicionar</button>
+  <button onclick="salvarTreino()">Salvar</button>
+
+  <ul id="listaEdicao"></ul>
+
+</div>
+
   <div class="teste">
     <div id="div_relogio">
         <p id="data"></p>
@@ -565,6 +604,83 @@ function iniciarDescanso(index){
 
   }, 1000);
 }
+
+//menu
+/* =======================
+   EDITAR
+======================= */
+const nome = document.getElementById("nome");
+const grupoEx = document.getElementById("grupoEx");
+const series = document.getElementById("series");
+const reps = document.getElementById("reps");
+const desc = document.getElementById("desc");
+
+function addEx(){
+
+  let ex={
+    grupoMuscular:grupoEx.value,
+    exercicio:nome.value,
+    series:series.value,
+    reps:reps.value,
+    descanso:desc.value
+  };
+
+  if(!treinos.anthony.A) treinos.anthony.A=[];
+
+  treinos.anthony.A.push(ex);
+
+  carregarEdit();
+}
+
+function carregarEdit(){
+
+  getEditLista().innerHTML = "";
+
+  treinos.anthony.A.forEach((e,i)=>{
+    editLista.innerHTML += `
+      <li>${e.exercicio}
+      <button onclick="remover(${i})">X</button>
+      </li>`;
+  });
+}
+
+function remover(i){
+  treinos.anthony.A.splice(i,1);
+  carregarEdit();
+}
+
+function salvarTreino(){
+  localStorage.setItem("treinos",JSON.stringify(treinos));
+  alert("Salvo");
+}
+
+/* =======================
+   MENU
+======================= */
+function getEditLista(){
+  return document.getElementById("editLista");
+}
+const alunoSel = document.getElementById("aluno");
+const diaSel = document.getElementById("dia");
+const grupoSel = document.getElementById("grupo");
+
+function mostrarAba(a){
+  abaTreino.style.display = a==="treino"?"block":"none";
+  abaEditar.style.display = a==="editar"?"block":"none";
+
+  if(a==="editar") carregarEdit();
+}
+
+/* =======================
+   SALVAR FILTRO
+======================= */
+grupoSel.onchange=()=>{
+  localStorage.setItem("grupo",grupoSel.value);
+};
+
+window.onload=()=>{
+  grupoSel.value = localStorage.getItem("grupo") || "";
+};
 </script>
 </body>
 </html>
