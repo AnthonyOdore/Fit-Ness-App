@@ -168,7 +168,7 @@
       }
       .li_ex{
         display: grid;
-        grid-template-columns: 2fr 2fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         align-items: top;
       }
       .li_gpm{
@@ -226,7 +226,7 @@
     </style>
 </head>
 <body class="oswald dayMode">
-  
+  <h6>versao 1.1.2</h6>
   <div class="teste">
     <div id="div_relogio">
         <p id="data"></p>
@@ -250,12 +250,21 @@
         <label>Treino:</label>
         <select id="dia" class="custom-select">
         <option value="selecione" disabled selected>selecione</option>
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
+        <option value="A">A - Peito / Tríceps</option>
+        <option value="B">B - Costas / Bíceps</option>
+        <option value="C">C - Perna</option>
         <option value="D">D</option>
         <option value="E">E</option>
         <option value="F">F</option>
+        </select>
+        <br><label>Grupo:</label>
+        <select id="grupo">
+          <option value="">Todos</option>
+          <option value="Peitoral">Peito</option>
+          <option value="Tríceps">Tríceps</option>
+          <option value="Costas">Costas</option>
+        <option value="Perna">Perna</option>
+
         </select>
         <br>
         
@@ -352,22 +361,22 @@ const treinos = {
     ],
 
     B: [
-      { exercicio: "Puxada frontal", series: 3, reps: 10, variacao: "aberta", descanso: "1 min"  },
-      { exercicio: "Remada baixa", series: 3, reps: 12, variacao: "fechada", descanso: "1 min"  },
-      { exercicio: "Remada aberta", series: 3, reps: 12, variacao: "unilateral pronada", descanso: "1 min"  },
-      { exercicio: "Biceps corda", series: 3, reps: 12, variacao: "pegada neutra", descanso: "1 min"  },
-      { exercicio: "Biceps rosca", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
-      { exercicio: "Biceps Concentrado", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  }
+      { grupoMuscular: "Costas",exercicio: "Puxada frontal", series: 3, reps: 10, variacao: "aberta", descanso: "1 min"  },
+      { grupoMuscular: "Costas",exercicio: "Remada baixa", series: 3, reps: 12, variacao: "fechada", descanso: "1 min"  },
+      { grupoMuscular: "Costas",exercicio: "Remada aberta", series: 3, reps: 12, variacao: "unilateral pronada", descanso: "1 min"  },
+      { grupoMuscular: "Bíceps",exercicio: "Biceps corda", series: 3, reps: 12, variacao: "pegada neutra", descanso: "1 min"  },
+      { grupoMuscular: "Bíceps",exercicio: "Biceps rosca", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { grupoMuscular: "Bíceps",exercicio: "Biceps Concentrado", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  }
     ],
 
     C: [
-      { exercicio: "Leg 90º", series: 3, reps: 10, variacao: "", descanso: "1 min"  },
-      { exercicio: "Leg 45º", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
-      { exercicio: "Agachamento hack", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
-      { exercicio: "cadeira Flexora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
-      { exercicio: "Stiff", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
-      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "sentado", descanso: "1 min"  },
-      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "em pé", descanso: "1 min"  }
+      { grupoMuscular: "Perna",exercicio: "Leg 90º", series: 3, reps: 10, variacao: "", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "Leg 45º", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "Agachamento hack", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "cadeira Flexora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "Stiff", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "Panturrilha", series: 3, reps: 12, variacao: "sentado", descanso: "1 min"  },
+      { grupoMuscular: "Perna",exercicio: "Panturrilha", series: 3, reps: 12, variacao: "em pé", descanso: "1 min"  }
     ],
   },
 
@@ -426,65 +435,74 @@ const treinos = {
 
 };
 
+const selectGrupo = document.getElementById("grupo");
+
+selectGrupo.addEventListener("change", () => {
+  localStorage.setItem("grupoSelecionado", selectGrupo.value);
+});
+window.addEventListener("load", () => {
+  const grupoSalvo = localStorage.getItem("grupoSelecionado");
+
+  if(grupoSalvo){
+    document.getElementById("grupo").value = grupoSalvo;
+  }
+});
 /* =========================
    📋 MOSTRAR TREINO
 ========================= */
 function mostrarTreino(){
+
   const aluno = document.getElementById("aluno").value;
   const dia = document.getElementById("dia").value;
+  const grupoFiltro = document.getElementById("grupo").value;
 
+  const lista = document.getElementById("visor_exercicio");
   const tabela = document.getElementById("tabelaTreino");
-  const visor = document.querySelector("#visor_exercicio ul");
 
+  lista.innerHTML = "";
   tabela.innerHTML = "";
-  visor.innerHTML = "";
 
-  if(!treinos[aluno] || !treinos[aluno][dia]){
-    alert("Treino não encontrado");
-    return;
-  }
-
-  const exercicios = treinos[aluno][dia];
   let ultimoGrupo = "";
 
-  exercicios.forEach((ex, index) => {
+  const estado = {};
 
-    // estado
-    estadoExercicios[index] = {
-      ativo: false,
-      inicio: null,
-      intervalo: null,
-      descansoTotal: tempoParaSegundos(ex.descanso),
-      descansoRestante: 0,
-      descansoIntervalo: null
+  treinos[aluno][dia].forEach((ex, i) => {
+
+    if(grupoFiltro && ex.grupoMuscular !== grupoFiltro){
+      return;
+    }
+
+    estado[i] = {
+      ativo:false,
+      tempo:0,
+      descanso:tempoParaSegundos(ex.descanso)
     };
 
-    // ===== TABELA =====
+    /* ===== TABELA ===== */
     tabela.innerHTML += `
       <tr>
         <td>${ex.exercicio}</td>
-        <td>${ex.variacao || ""}</td>
+		<td>${ex.variacao}</td>
         <td>${ex.series}</td>
         <td>${ex.reps}</td>
         <td>${ex.descanso}</td>
       </tr>
     `;
 
-    // ===== GRUPO MUSCULAR (só quando muda) =====
-    if(ex.grupoMuscular && ex.grupoMuscular !== ultimoGrupo){
-      visor.innerHTML += `
-        <li class="li_gpm">${ex.grupoMuscular}</li>
-      `;
+    /* ===== GRUPO ===== */
+    if(ex.grupoMuscular !== ultimoGrupo){
+      lista.innerHTML += `<li class="li_gpm">${ex.grupoMuscular}</li>`;
       ultimoGrupo = ex.grupoMuscular;
     }
 
-    // ===== LISTA =====
-    visor.innerHTML += `
-      <li class="li_ex" onclick="toggleEx(${index}, this)">
+    /* ===== LISTA ===== */
+    lista.innerHTML += `
+      <li class="li_ex" onclick="toggle(${i}, this)">
         <span>${ex.exercicio}</span>
+        <span>${ex.variacao} </span> 
         <span>${ex.series}x${ex.reps}</span>
-        <span id="timer-${index}">0s</span>
-        <span id="descanso-${index}">--</span>
+        <span id="t${i}">0s</span>
+        <span id="d${i}">--</span>
       </li>
     `;
   });
