@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#053800">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@367&display=swap" rel="stylesheet">
+    <title>Treino</title>
+    <link rel="icon" href="icon.jpg" >
+    <style>
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+        .nightMode{
+          background: #053800;
+          background: linear-gradient(28deg, rgba(5, 56, 0, 1) 0%, rgba(0, 12, 13, 1) 98%) fixed;
+        }
+
+        .dayMode{
+          background: #045c30;
+          background: linear-gradient(320deg, rgb(0, 73, 6) 40%, rgb(8, 107, 13) 60%) fixed;
+        }
+
+        .oswald{
+        font-family: "Oswald", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 100;
+        font-style: normal;
+        font-size: 18px;
+      }
+      #acesso select,#acesso option{
+        font-size: 22px;
+        color: #2efa7c;
+      }
+      #acesso{
+        display: block;
+        background-color: rgb(5, 83, 11);
+        border: #053800 solid 1px;
+        width: 98vw;
+        height: 20vh;
+        margin: auto;text-align: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        color: rgb(0, 15, 3);
+        font-size: 20px;
+        border-radius: 30px;
+      }
+      select,button, option{
+        border: none;
+        outline: none;
+        color: antiquewhite;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 18px;
+        border-radius: 5px;
+        appearance: none; /* Remove estilo padrão do navegador */
+        -webkit-appearance: none;
+        border-bottom: 1px #0b8a00 solid ;
+        color: #00200c;
+        padding-left: 5px;
+      }
+      .custom-select {
+        &, &::picker(select) {
+          appearance: base-select;   
+          outline: none; 
+          border: none;
+          background: transparent;
+          border-bottom: 1px #0b8a00 solid ;
+        }
+      }
+      option{
+        background-color: #053800;
+        border: none;
+        padding-left: 5px;
+        color: #2efa7c;
+        margin-bottom: 5px;
+      }
+      option:hover{
+        background-color: rgb(0, 116, 15);
+      }
+
+      select:hover,button:hover{
+        border: none;
+        outline: none;
+        background-color: rgba(5, 117, 5, 0.123);
+        border-bottom: 1px #0b8a00 solid ;
+      }
+      select{
+        width: 110px;
+        height: 25px;
+        text-align: center;
+      }
+      button{
+        width: 200px;
+        height: 30px;
+        background-color: #0b8a00;
+        color: rgb(248, 255, 248);
+        margin: auto;
+        margin-top: 10px;
+      }
+      #div_relogio{
+        display: flex;
+        border-radius: 30px;
+        font-size: 16px;
+        margin-left: 15px;
+      }
+      #relogio{
+        border-left: 1px solid rgb(0, 0, 0);
+        padding-left: 10px;
+        margin-left: 10px;
+      }
+      
+      @media (min-width: 868px) and (max-width: 1920px){
+        table {
+          max-width: 600px; /* Limita a largura máxima no desktop */
+          margin: 0 auto; /* Centraliza */
+        }
+        #acesso{
+          max-width: 600px;
+        }
+      }
+      table{
+        width: 100vw;
+        height: 200px;
+        margin: auto;
+        margin-top: 50px;
+        border: 1px solid rgb(9, 31, 0);
+        text-align: center;
+      }
+      td{
+        border: 1px solid rgba(9, 31, 0, 0.068);
+      }
+      #div_tempo{
+        display: flex;
+        margin-left: 15px;
+      }
+      #marcar_tempo {
+        width: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 10px;
+        position: absolute;
+        margin-top: 50px;
+      }
+      #tempo_fim{
+        margin-left: 20px;
+        border-left: 1px solid rgb(0, 0, 0);
+        padding-left: 20px;
+      }
+      #visor_exercicio ul{
+        margin-top:  20px;
+      }
+      .li_ex{
+        display: flex;
+        width: 97vw;
+        height: 60px;
+        background-color: rgb(8, 48, 0);
+        margin: auto;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-top: 0;
+        align-items: top;
+        color: antiquewhite;
+        gap: 10px;
+      }
+      .li_ex{
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr 1fr;
+        align-items: top;
+      }
+      .li_gpm{
+        display: flex;
+        width: 97vw;
+        height: 30px;
+        background-color: rgb(5, 32, 0);
+        margin: auto;
+        padding-left:10px;
+        border-radius: 5px;
+        margin-top: 7px;
+        align-items: top;
+        color: antiquewhite;
+      }
+      /* 🔥 define "colunas" 
+      .li_ex span{
+        flex: 1;
+        background-color: aquamarine;
+      }
+
+      /* opcional: tamanhos diferentes */
+      
+
+      .desc, .iSetaEx{
+        text-align: right;
+
+      }
+
+      .iSetaEx{
+        width: 20px;
+        position: absolute;
+        right: 10px;
+        margin-top: 15px;
+        filter: invert(100%); 
+        -webkit-filter: invert(1);
+      }
+      #nome_aluno{
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+
+      .li_ex.feito{
+        background-color: rgb(0, 90, 0);
+        opacity: 0.7;
+      }
+
+      .li_ex.ativo{
+        border: 2px solid #2efa7c;
+      }
+
+      .timer{
+        font-size: 15px;
+      }
+    </style>
+</head>
+<body class="oswald dayMode">
+  
+  <div class="teste">
+    <div id="div_relogio">
+        <p id="data"></p>
+        <p id="relogio"></p>
+    </div>
+    <div id="div_tempo">
+        <p id="tempo_inicio">inicio treino: </p>
+        <p id="tempo_fim">fim treino: </p>
+        <p id="cronometro"></p>
+  </div>
+
+      <h3 id="nome_aluno"></h3>
+
+<div id="acesso">
+        <label>Aluno:</label>
+        <select id="aluno" class="custom-select">
+        <option value="selecione" disabled selected>selecione</option>
+        <option value="anthony">Anthony</option>
+        <option value="luciano">Luciano</option>
+        </select>
+        <label>Treino:</label>
+        <select id="dia" class="custom-select">
+        <option value="selecione" disabled selected>selecione</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        </select>
+        <br>
+        
+        <button onclick="mostrarTreino()">Mostrar treino</button>
+    <button id="marcar_tempo" onclick="tempo()">iniciar</button>
+
+      </div>
+
+<div id="visor_exercicio">
+  <ul>
+
+  </ul>
+</div>
+
+<table border="0">
+<thead>
+<tr>
+<th>Exercício</th>
+<th>Variação</th>
+<th>Séries</th>
+<th>Repetições</th>
+<th>Descanso</th>
+</tr>
+</thead>
+
+<tbody id="tabelaTreino">
+</tbody>
+</table>
+
+<button onclick="ativarPainel()">Ativar Painel na Tela de Bloqueio</button>
+
+<!-- Áudio de 1 segundo de silêncio em base64 (para não precisar de arquivo externo) -->
+<audio id="silencio" loop src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
+
+  
+
+<script>
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("SW registrado"))
+    .catch(err => console.log("Erro SW:", err));
+}
+
+  const estadoExercicios = {};
+
+function ativarPainel() {
+    const audio = document.getElementById('silencio');
+    audio.play();
+
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = "playing";
+    }
+}
+
+const agora = new Date();
+
+// Opção 1: Formatação automática (Recomendada)
+const dataFormatada = agora.toLocaleDateString('pt-BR', {
+  weekday: 'long', // 'long' para nome completo, 'short' para abreviado
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+});
+document.getElementById("data").innerText = dataFormatada
+
+function iniciarRelogio() {
+  const relogio = document.getElementById("relogio");
+
+  if (!relogio) {
+    console.log("Elemento relogio ainda não existe...");
+    return;
+  }
+
+  setInterval(function() {
+    const hora_atual = new Date().toLocaleTimeString();
+    relogio.innerText = hora_atual;
+  }, 1000);
+}
+
+// garante que só roda depois que tudo carregou
+window.onload = iniciarRelogio;
+
+
+   var h_atual = 0;
+   var m_atual = 0;
+   var s_atual = 0;
+
+    var h_form;
+    var m_form;
+    var s_form;
+
+function tempo(){
+   var hora_atual = new Date().toLocaleTimeString();
+
+   if(document.getElementById("marcar_tempo").innerText == "iniciar"){
+      document.getElementById("marcar_tempo").innerText = "Finalizar";
+      document.getElementById("tempo_inicio").innerText += hora_atual
+      
+      fator_cron = true
+      
+    }else{
+      document.getElementById("marcar_tempo").innerText = "iniciar"
+      document.getElementById("tempo_fim").innerText += hora_atual
+      fator_cron = false;
+      
+    }
+
+  }   
+const treinos = {
+
+  luciano: {
+    A: [
+      { grupoMuscular: "Peitoral", exercicio: "Supino", series: 3, reps: 10 , variacao: "halter", descanso: "1 min"},
+      { grupoMuscular: "Peitoral",exercicio: "Crucifixo", series: 3, reps: 10, variacao: "halter", descanso: "1 min" },
+      { grupoMuscular: "Peitoral",exercicio: "Voador", series: 3, reps: 10, variacao: "", descanso: "1 min" },
+      { grupoMuscular: "Tríceps",exercicio: "pulley", series: 3, reps: 12, variacao: "barra", descanso: "1 min" },
+      { grupoMuscular: "Tríceps",exercicio: "pulley", series: 3, reps: 12, variacao: "corda (cross)", descanso: "1 min" },
+      { grupoMuscular: "Tríceps",exercicio: "paralela", series: 3,reps: 12, variacao: "máquina", descanso: "1 min" }
+    ],
+
+    B: [
+      { exercicio: "Puxada frontal", series: 3, reps: 10, variacao: "aberta", descanso: "1 min"  },
+      { exercicio: "Remada baixa", series: 3, reps: 12, variacao: "fechada", descanso: "1 min"  },
+      { exercicio: "Remada aberta", series: 3, reps: 12, variacao: "unilateral pronada", descanso: "1 min"  },
+      { exercicio: "Biceps corda", series: 3, reps: 12, variacao: "pegada neutra", descanso: "1 min"  },
+      { exercicio: "Biceps rosca", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { exercicio: "Biceps Concentrado", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  }
+    ],
+
+    C: [
+      { exercicio: "Leg 90º", series: 3, reps: 10, variacao: "", descanso: "1 min"  },
+      { exercicio: "Leg 45º", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Agachamento hack", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "cadeira Flexora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Stiff", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "sentado", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "em pé", descanso: "1 min"  }
+    ],
+  },
+
+  anthony: {
+    A: [
+      { exercicio: "Supino", series: 3, reps: 10 , variacao: "halter", descanso: "1 min"},
+      { exercicio: "Crucifixo", series: 3, reps: 10, variacao: "halter", descanso: "1 min" },
+      { exercicio: "Voador", series: 3, reps: 10, variacao: "", descanso: "1 min" },
+      { exercicio: "Tríceps pulley", series: 3, reps: 12, variacao: "barra", descanso: "1 min" },
+      { exercicio: "Tríceps pulley", series: 3, reps: 12, variacao: "corda (cross)", descanso: "1 min" },
+      { exercicio: "Tríceps frances", series: 3,reps: 12, variacao: "corda (cross)", descanso: "1 min" }
+    ],
+
+    B: [
+      { exercicio: "Cadeira Extensora", series: 3, reps: 10, variacao: "", descanso: "1 min"  },
+      { exercicio: "Agachamento Sumo", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Adutora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "cadeira Flexora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Stiff", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "sentado", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "em pé", descanso: "1 min"  }
+    ],
+    C: [
+      { exercicio: "Puxada frontal", series: 3, reps: 10, variacao: "aberta", descanso: "1 min"  },
+      { exercicio: "Remada baixa", series: 3, reps: 12, variacao: "fechada", descanso: "1 min"  },
+      { exercicio: "Remada aberta", series: 3, reps: 12, variacao: "unilateral pronada", descanso: "1 min"  },
+      { exercicio: "Biceps corda", series: 3, reps: 12, variacao: "pegada neutra", descanso: "1 min"  },
+      { exercicio: "Biceps rosca", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { exercicio: "Biceps Concentrado", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  }
+    ],
+    D: [
+      { exercicio: "Biceps Martelo", series: 3, reps: 10, variacao: "halter", descanso: "1 min"   },
+      { exercicio: "Biceps Rosca", series: 3, reps: 12, variacao: "barra W", descanso: "1 min"   },
+      { exercicio: "Triceps pulley", series: 3, reps: 12, variacao: "corda", descanso: "1 min"   },
+      { exercicio: "triceps Testa", series: 3, reps: 12, variacao: "barra", descanso: "1 min"   },
+      { exercicio: "antebraco", series: 3, reps: 12, variacao: "halter", descanso: "1 min"   },
+      { exercicio: "antebraco", series: 3, reps: 12, variacao: "barra", descanso: "1 min"   }
+    ],
+    E: [
+      { exercicio: "Leg 90º", series: 3, reps: 10, variacao: "", descanso: "1 min"  },
+      { exercicio: "Leg 45º", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Agachamento hack", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "cadeira Flexora", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "Stiff", series: 3, reps: 12, variacao: "halter", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "sentado", descanso: "1 min"  },
+      { exercicio: "Panturrilha", series: 3, reps: 12, variacao: "em pé", descanso: "1 min"  }
+    ],
+    F: [
+      { exercicio: "Puxada frontal", series: 3, reps: 10, variacao: "aberta", descanso: "1 min"  },
+      { exercicio: "Remada baixa", series: 3, reps: 12, variacao: "fechada", descanso: "1 min"  },
+      { exercicio: "Barra fixa", series: 3, reps: 8, variacao: "", descanso: "1 min"  },
+      { exercicio: "Remada Cavalinho", series: 3, reps: 12, variacao: "", descanso: "1 min"  },
+      { exercicio: "ABDOMINAL", series: 3, reps: 20, variacao: "", descanso: "1 min"  }
+    ]
+  },
+
+};
+
+function mostrarTreino(){
+  const aluno = document.getElementById("aluno").value;
+  const dia = document.getElementById("dia").value;
+  const tabela = document.getElementById("tabelaTreino");
+
+  tabela.innerHTML = "";
+
+  if(treinos[aluno] && treinos[aluno][dia]){
+
+    const exercicios = treinos[aluno][dia];
+    var ada = exercicios
+    exercicios.forEach(ex => {
+
+      tabela.innerHTML += `
+      <li>${ex.grupoMuscular}</li>
+      <tr>
+        <td>${ex.exercicio}</td>
+        <td>${ex.variacao}</td>
+        <td>${ex.series}</td>
+        <td>${ex.reps}</td>
+        <td>${ex.descanso}</td>
+      </tr>
+      `;
+      
+      const visor_exercicio = document.querySelector("#visor_exercicio ul");
+visor_exercicio.innerHTML = "";
+
+
+function tempoParaSegundos(desc){
+  if(desc.includes("min")){
+    return parseInt(desc) * 60;
+  }
+  if(desc.includes("s")){
+    return parseInt(desc);
+  }
+  return 60; // padrão
+}
+
+exercicios.forEach((ex, index) => {
+
+        estadoExercicios[index] = {
+          ativo: false,
+          inicio: null,
+          intervalo: null,
+          descansoTotal: tempoParaSegundos(ex.descanso),
+          descansoRestante: 0,
+          descansoIntervalo: null
+        };
+
+        visor_exercicio.innerHTML += `
+          <li class="li_gpm">${ex.grupoMuscular || ""}</li>
+
+          <li class="li_ex" onclick="toggleEx(${index}, this)">
+            <span>${ex.exercicio}</span>
+            <span>${ex.series} x ${ex.reps}</span>
+            <span id="timer-${index}">0s</span>
+            <span id="descanso-${index}">--</span>
+            
+          </li>
+        `;
+      });
+    });
+    document.getElementById("nome_aluno").innerText = aluno.toUpperCase() + "  -  " + dia.toUpperCase()
+
+  }else{
+    window.alert("treino nao encontrado")
+  }
+
+}
+function atualizarMediaSession(exercicio, index){
+  if ('mediaSession' in navigator) {
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: exercicio.exercicio + " - " + exercicio.variacao, // nome do exercício
+      artist: `Séries: ${exercicio.series} | Reps: ${exercicio.reps}`,
+      album: `Descanso: ${exercicio.descanso}`,
+      artwork: [
+        {
+          src: 'https://cdn-icons-png.flaticon.com/512/1048/1048953.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    });
+
+    // botão voltar
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      trocarExercicio(index - 1);
+    });
+
+    // botão avançar
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      trocarExercicio(index + 1);
+    });
+
+    navigator.mediaSession.setActionHandler('play', () => {
+      toggleEx(index, document.querySelectorAll('.li_ex')[index]);
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      toggleEx(index, document.querySelectorAll('.li_ex')[index]);
+    });
+  }
+}
+
+function trocarExercicio(novoIndex){
+  const lista = document.querySelectorAll('.li_ex');
+
+  if(lista[novoIndex]){
+    lista[novoIndex].click();
+  }
+}
+function toggleEx(index, elemento){
+  const estado = estadoExercicios[index];
+
+  if(!estado.ativo){
+    // ▶️ INICIAR EXERCÍCIO
+    estado.ativo = true;
+    estado.inicio = new Date();
+
+    elemento.classList.add("ativo");
+
+    estado.intervalo = setInterval(() => {
+      const agora = new Date();
+      const diff = Math.floor((agora - estado.inicio)/1000);
+
+      document.getElementById(`timer-${index}`).innerText = diff + "s";
+    }, 1000);
+
+  } else {
+    // ⏹️ FINALIZAR EXERCÍCIO → INICIAR DESCANSO
+    clearInterval(estado.intervalo);
+
+    elemento.classList.remove("ativo");
+    elemento.classList.add("feito");
+
+    estado.ativo = false;
+
+    iniciarDescanso(index, elemento);
+  }
+}
+function iniciarDescanso(index, elemento){
+  const estado = estadoExercicios[index];
+
+  estado.descansoRestante = estado.descansoTotal;
+
+  estado.descansoIntervalo = setInterval(() => {
+
+    estado.descansoRestante--;
+
+    document.getElementById(`descanso-${index}`).innerText =
+      estado.descansoRestante + "s";
+
+    // 🔥 ACABOU DESCANSO
+    if(estado.descansoRestante <= 0){
+      clearInterval(estado.descansoIntervalo);
+      document.getElementById(`descanso-${index}`).innerText = "GO!";
+    }
+
+  }, 1000);
+}
+
+const estados = {}
+
+function carregartreino(){
+  const aluno = document.getElementById("aluno").value;
+  const dia = document.getElementById("dia").value;
+  const cron_body = document.querySelector("#cron_exer")
+
+  cron_body.innerHTML ="";
+  
+  treinos[aluno][dia].forEach((exercicio,index)=>{
+    const tr = document.createElement("tr")
+
+    tr.innerHTML = `<td>${exercicio}</td>
+                    <td id="inicio-${index}">--</td>
+                    <td id="fim-${index}">--</td>
+                    <td id="tempo-${index}">0s</td>
+                    <td><button onclick="toggle(${index})">iniciar</button></td>
+                    `
+
+                    estados[index]={
+                      rodando:false,
+                      inicio:null,
+                      fim:null
+
+                    }
+                    tbody.appendChild(tr)
+  })
+}
+
+function toggle(index){
+  const estado = estados[index]
+  const btn = document.querySelectorAll("button")[index + 1]
+
+  if(!estado.rodando){
+    estado.inicio = new Date()
+
+    document.getElementById(`inicio-${index}`).textContent = estado.inicio.toLocaleTimeString()
+    estado.intervalo = setInterval(()=>{
+      const agora = new Date()
+      const diff = Math.floor((agora - estado.inicio)/1000)
+      document.getElementById(`tempo-${index}`).textContent = diff +"s"
+    },1000)
+
+    btn.textContent = "Parar"
+    estado.rodando = true
+  }else{
+    const fim = new Date()
+    document.getElementById(`fim-${index}`).textContent = fim.toLocaleTimeString()
+
+    clearInterval(estado.intervalo)
+
+    const total = Math.floor((fim - estado.inicio)/1000)
+    document.getElementById(`tempo-${index}`).textContent = total +"s"
+
+    btn.textContent = total + "s"
+    btn.textContent = "Iniciar"
+    estado.rodando = false
+  }
+}
+
+
+    </script>
+</body>
+</html>
