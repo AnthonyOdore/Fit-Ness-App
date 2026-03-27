@@ -290,80 +290,55 @@
 <!-- Áudio de 1 segundo de silêncio em base64 (para não precisar de arquivo externo) -->
 <audio id="silencio" loop src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
 
-  
-
 <script>
-  if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("SW registrado"))
-    .catch(err => console.log("Erro SW:", err));
+/* =========================
+   🔌 SERVICE WORKER
+========================= */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
 }
 
-  const estadoExercicios = {};
-
-function ativarPainel() {
-    const audio = document.getElementById('silencio');
-    audio.play();
-
-    if ('mediaSession' in navigator) {
-        navigator.mediaSession.playbackState = "playing";
-    }
-}
-
-const agora = new Date();
-
-// Opção 1: Formatação automática (Recomendada)
-const dataFormatada = agora.toLocaleDateString('pt-BR', {
-  weekday: 'long', // 'long' para nome completo, 'short' para abreviado
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric'
-});
-document.getElementById("data").innerText = dataFormatada
-
-function iniciarRelogio() {
-  const relogio = document.getElementById("relogio");
-
-  if (!relogio) {
-    console.log("Elemento relogio ainda não existe...");
-    return;
+/* =========================
+   🔔 NOTIFICAÇÃO
+========================= */
+async function pedirPermissao(){
+  if ("Notification" in window) {
+    await Notification.requestPermission();
   }
-
-  setInterval(function() {
-    const hora_atual = new Date().toLocaleTimeString();
-    relogio.innerText = hora_atual;
-  }, 1000);
 }
 
-// garante que só roda depois que tudo carregou
-window.onload = iniciarRelogio;
+function notificar(msg){
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(reg => {
+      reg.showNotification("Treino", {
+        body: msg,
+        icon: "icon-192.png",
+        vibrate: [200,100,200]
+      });
+    });
+  }
+}
 
+pedirPermissao();
 
-   var h_atual = 0;
-   var m_atual = 0;
-   var s_atual = 0;
+/* =========================
+   ⏱️ AUXILIAR
+========================= */
+function tempoParaSegundos(desc){
+  if(!desc) return 60;
+  if(desc.includes("min")) return parseInt(desc)*60;
+  if(desc.includes("s")) return parseInt(desc);
+  return 60;
+}
 
-    var h_form;
-    var m_form;
-    var s_form;
+/* =========================
+   🧠 ESTADO
+========================= */
+const estadoExercicios = {};
 
-function tempo(){
-   var hora_atual = new Date().toLocaleTimeString();
-
-   if(document.getElementById("marcar_tempo").innerText == "iniciar"){
-      document.getElementById("marcar_tempo").innerText = "Finalizar";
-      document.getElementById("tempo_inicio").innerText += hora_atual
-      
-      fator_cron = true
-      
-    }else{
-      document.getElementById("marcar_tempo").innerText = "iniciar"
-      document.getElementById("tempo_fim").innerText += hora_atual
-      fator_cron = false;
-      
-    }
-
-  }   
+/* =========================
+   📦 TREINOS (SEU ORIGINAL)
+========================= */
 const treinos = {
 
   luciano: {
@@ -451,128 +426,102 @@ const treinos = {
 
 };
 
+/* =========================
+   📋 MOSTRAR TREINO
+========================= */
 function mostrarTreino(){
   const aluno = document.getElementById("aluno").value;
   const dia = document.getElementById("dia").value;
+
   const tabela = document.getElementById("tabelaTreino");
   const visor = document.querySelector("#visor_exercicio ul");
 
   tabela.innerHTML = "";
-  visor.innerHTML = ""; // ✅ fora do loop
+  visor.innerHTML = "";
 
-  if(treinos[aluno] && treinos[aluno][dia]){
+  if(!treinos[aluno] || !treinos[aluno][dia]){
+    alert("Treino não encontrado");
+    return;
+  }
 
-    const exercicios = treinos[aluno][dia];
+  const exercicios = treinos[aluno][dia];
+  let ultimoGrupo = "";
 
-    exercicios.forEach((ex, index) => {
+  exercicios.forEach((ex, index) => {
 
-      estadoExercicios[index] = {
-        ativo: false,
-        inicio: null,
-        intervalo: null,
-        descansoTotal: tempoParaSegundos(ex.descanso),
-        descansoRestante: 0,
-        descansoIntervalo: null
-      };
+    // estado
+    estadoExercicios[index] = {
+      ativo: false,
+      inicio: null,
+      intervalo: null,
+      descansoTotal: tempoParaSegundos(ex.descanso),
+      descansoRestante: 0,
+      descansoIntervalo: null
+    };
 
-      tabela.innerHTML += `
-        <tr>
-          <td>${ex.exercicio}</td>
-          <td>${ex.variacao}</td>
-          <td>${ex.series}</td>
-          <td>${ex.reps}</td>
-          <td>${ex.descanso}</td>
-        </tr>
-      `;
+    // ===== TABELA =====
+    tabela.innerHTML += `
+      <tr>
+        <td>${ex.exercicio}</td>
+        <td>${ex.variacao || ""}</td>
+        <td>${ex.series}</td>
+        <td>${ex.reps}</td>
+        <td>${ex.descanso}</td>
+      </tr>
+    `;
 
+    // ===== GRUPO MUSCULAR (só quando muda) =====
+    if(ex.grupoMuscular && ex.grupoMuscular !== ultimoGrupo){
       visor.innerHTML += `
-        <li class="li_ex" onclick="toggleEx(${index}, this)">
-          <span>${ex.exercicio}</span>
-          <span>${ex.series}x${ex.reps}</span>
-          <span id="timer-${index}">0s</span>
-          <span id="descanso-${index}">--</span>
-        </li>
+        <li class="li_gpm">${ex.grupoMuscular}</li>
       `;
-    });
+      ultimoGrupo = ex.grupoMuscular;
+    }
 
-  } else {
-    alert("treino nao encontrado");
-  }
+    // ===== LISTA =====
+    visor.innerHTML += `
+      <li class="li_ex" onclick="toggleEx(${index}, this)">
+        <span>${ex.exercicio}</span>
+        <span>${ex.series}x${ex.reps}</span>
+        <span id="timer-${index}">0s</span>
+        <span id="descanso-${index}">--</span>
+      </li>
+    `;
+  });
 }
 
-function atualizarMediaSession(exercicio, index){
-  if ('mediaSession' in navigator) {
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: exercicio.exercicio + " - " + exercicio.variacao, // nome do exercício
-      artist: `Séries: ${exercicio.series} | Reps: ${exercicio.reps}`,
-      album: `Descanso: ${exercicio.descanso}`,
-      artwork: [
-        {
-          src: 'https://cdn-icons-png.flaticon.com/512/1048/1048953.png',
-          sizes: '512x512',
-          type: 'image/png'
-        }
-      ]
-    });
-
-    // botão voltar
-    navigator.mediaSession.setActionHandler('previoustrack', () => {
-      trocarExercicio(index - 1);
-    });
-
-    // botão avançar
-    navigator.mediaSession.setActionHandler('nexttrack', () => {
-      trocarExercicio(index + 1);
-    });
-
-    navigator.mediaSession.setActionHandler('play', () => {
-      toggleEx(index, document.querySelectorAll('.li_ex')[index]);
-    });
-
-    navigator.mediaSession.setActionHandler('pause', () => {
-      toggleEx(index, document.querySelectorAll('.li_ex')[index]);
-    });
-  }
-}
-
-function trocarExercicio(novoIndex){
-  const lista = document.querySelectorAll('.li_ex');
-
-  if(lista[novoIndex]){
-    lista[novoIndex].click();
-  }
-}
-function toggleEx(index, elemento){
+/* =========================
+   ▶️ EXERCÍCIO
+========================= */
+function toggleEx(index, el){
   const estado = estadoExercicios[index];
 
   if(!estado.ativo){
-    // ▶️ INICIAR EXERCÍCIO
     estado.ativo = true;
     estado.inicio = new Date();
 
-    elemento.classList.add("ativo");
+    el.classList.add("ativo");
 
     estado.intervalo = setInterval(() => {
-      const agora = new Date();
-      const diff = Math.floor((agora - estado.inicio)/1000);
-
+      const diff = Math.floor((new Date() - estado.inicio)/1000);
       document.getElementById(`timer-${index}`).innerText = diff + "s";
     }, 1000);
 
   } else {
-    // ⏹️ FINALIZAR EXERCÍCIO → INICIAR DESCANSO
     clearInterval(estado.intervalo);
 
-    elemento.classList.remove("ativo");
-    elemento.classList.add("feito");
-
     estado.ativo = false;
+    el.classList.remove("ativo");
+    el.classList.add("feito");
 
-    iniciarDescanso(index, elemento);
+    iniciarDescanso(index);
   }
 }
-function iniciarDescanso(index, elemento){
+
+/* =========================
+   💤 DESCANSO
+========================= */
+function iniciarDescanso(index){
   const estado = estadoExercicios[index];
 
   estado.descansoRestante = estado.descansoTotal;
@@ -584,96 +533,20 @@ function iniciarDescanso(index, elemento){
     document.getElementById(`descanso-${index}`).innerText =
       estado.descansoRestante + "s";
 
-    // 🔥 ACABOU DESCANSO
     if(estado.descansoRestante <= 0){
       clearInterval(estado.descansoIntervalo);
+
       document.getElementById(`descanso-${index}`).innerText = "GO!";
+
+      notificar("Descanso acabou 💪");
+
+      if(navigator.vibrate){
+        navigator.vibrate([200,100,200]);
+      }
     }
 
   }, 1000);
 }
-
-async function pedirPermissao(){
-  if ("Notification" in window) {
-    const perm = await Notification.requestPermission();
-    console.log("Permissão:", perm);
-  }
-}
-
-function notificar(titulo, corpo){
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(reg => {
-      reg.showNotification(titulo, {
-        body: corpo,
-        icon: "icon-192.png",
-        vibrate: [200,100,200]
-      });
-    });
-  }
-}
-pedirPermissao();
-
-const estados = {}
-
-function carregartreino(){
-  const aluno = document.getElementById("aluno").value;
-  const dia = document.getElementById("dia").value;
-  const cron_body = document.querySelector("#cron_exer")
-
-  cron_body.innerHTML ="";
-  
-  treinos[aluno][dia].forEach((exercicio,index)=>{
-    const tr = document.createElement("tr")
-
-    tr.innerHTML = `<td>${exercicio}</td>
-                    <td id="inicio-${index}">--</td>
-                    <td id="fim-${index}">--</td>
-                    <td id="tempo-${index}">0s</td>
-                    <td><button onclick="toggle(${index})">iniciar</button></td>
-                    `
-
-                    estados[index]={
-                      rodando:false,
-                      inicio:null,
-                      fim:null
-
-                    }
-                    tbody.appendChild(tr)
-  })
-}
-
-function toggle(index){
-  const estado = estados[index]
-  const btn = document.querySelectorAll("button")[index + 1]
-
-  if(!estado.rodando){
-    estado.inicio = new Date()
-
-    document.getElementById(`inicio-${index}`).textContent = estado.inicio.toLocaleTimeString()
-    estado.intervalo = setInterval(()=>{
-      const agora = new Date()
-      const diff = Math.floor((agora - estado.inicio)/1000)
-      document.getElementById(`tempo-${index}`).textContent = diff +"s"
-    },1000)
-
-    btn.textContent = "Parar"
-    estado.rodando = true
-  }else{
-    const fim = new Date()
-    document.getElementById(`fim-${index}`).textContent = fim.toLocaleTimeString()
-
-    clearInterval(estado.intervalo)
-
-    const total = Math.floor((fim - estado.inicio)/1000)
-    document.getElementById(`tempo-${index}`).textContent = total +"s"
-
-    btn.textContent = total + "s"
-    btn.textContent = "Iniciar"
-    estado.rodando = false
-  }
-}
-
-
-    </script>
+</script>
 </body>
 </html>
