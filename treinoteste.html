@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>App Treino</title>
+
+<style>
+body{font-family:Arial;background:#111;color:white;text-align:center}
+.li_ex{display:flex;justify-content:space-between;background:#053800;margin:5px;padding:10px;border-radius:5px;cursor:pointer}
+.imgs-Ex{max-height:0;overflow:hidden;transition:0.3s}
+.imgs-Ex.ativo{max-height:300px}
+.rotacionado img{transform:rotate(180deg);transition:0.3s}
+</style>
+</head>
+
+<body>
+
+<h2>Login</h2>
+<input id="nomeUser">
+<button onclick="entrar()">Entrar</button>
+
+<h2>Adicionar</h2>
+<input id="nome" placeholder="Exercício">
+<input id="grupoEx" placeholder="Variação">
+<input id="series" placeholder="Séries">
+<input id="reps" placeholder="Reps">
+<button onclick="pegarDados()">Adicionar</button>
+
+<ul id="listaTreinos"></ul>
+
+<script>
+
+/* =========================
+   DADOS
+========================= */
+let dados = { usuarios:{} };
+let usuarioAtual = null;
+
+/* =========================
+   INICIAR (JSON + LOCAL)
+========================= */
+async function iniciar(){
+
+  const dadosLocal = localStorage.getItem("dadosTreino");
+
+  if(dadosLocal){
+    dados = JSON.parse(dadosLocal);
+  }else{
+    const res = await fetch("dados.json");
+    dados = await res.json();
+
+    salvar();
+  }
+}
+
+function salvar(){
+  localStorage.setItem("dadosTreino", JSON.stringify(dados));
+}
+
+/* =========================
+   LOGIN
+========================= */
+function entrar(){
+  const nome = document.getElementById("nomeUser").value;
+
+  if(!dados.usuarios[nome]){
+    dados.usuarios[nome] = { treinos:[] };
+  }
+
+  usuarioAtual = nome;
+
+  salvar();
+  renderizar();
+}
+
+/* =========================
+   TREINOS
+========================= */
+function pegarDados(){
+  const ex = {
+    exercicio: nome.value,
+    variacao: grupoEx.value,
+    series: series.value,
+    reps: reps.value
+  };
+
+  dados.usuarios[usuarioAtual].treinos.push(ex);
+
+  salvar();
+  renderizar();
+}
+
+function remover(i){
+  dados.usuarios[usuarioAtual].treinos.splice(i,1);
+
+  salvar();
+  renderizar();
+}
+
+/* =========================
+   RENDER
+========================= */
+function renderizar(){
+  const lista = document.getElementById("listaTreinos");
+  lista.innerHTML = "";
+
+  const treinos = dados.usuarios[usuarioAtual]?.treinos || [];
+
+  treinos.forEach((ex,i)=>{
+
+    lista.innerHTML += `
+      <li class="li_ex" onclick="expand(${i}, '${ex.exercicio}')">
+        <span>${ex.exercicio}</span>
+        <span>${ex.series}x${ex.reps}</span>
+
+        <span id="s${i}">
+          <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" width="20">
+        </span>
+
+        <button onclick="remover(${i});event.stopPropagation()">❌</button>
+      </li>
+
+      <div class="imgs-Ex"></div>
+    `;
+  });
+}
+
+/* =========================
+   EXPANDIR
+========================= */
+function expand(i,nome){
+  const todos = document.getElementsByClassName("imgs-Ex");
+  const atual = todos[i];
+  const seta = document.getElementById("s"+i);
+
+  const aberto = atual.classList.contains("ativo");
+
+  for(let j=0;j<todos.length;j++){
+    todos[j].classList.remove("ativo");
+    document.getElementById("s"+j)?.classList.remove("rotacionado");
+  }
+
+  if(!aberto){
+    atual.classList.add("ativo");
+    seta.classList.add("rotacionado");
+
+    carregarImg(i,nome);
+  }
+}
+
+/* =========================
+   IMAGENS
+========================= */
+function formatar(nome){
+  return nome.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replaceAll(" ","_");
+}
+
+function carregarImg(i,nome){
+  const caminho = "img/exercicios/"+formatar(nome)+".png";
+
+  const el = document.getElementsByClassName("imgs-Ex")[i];
+
+  el.innerHTML = `
+    <img src="${caminho}" style="width:100%"
+    onerror="this.src='https://via.placeholder.com/300x200?text=Sem+Imagem'">
+  `;
+}
+
+/* =========================
+   START
+========================= */
+iniciar();
+
+</script>
+
+</body>
+</html>
