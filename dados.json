@@ -1,0 +1,27 @@
+{
+  "usuarios": {
+    "anthony": {
+      "treinos": [
+        {
+          "exercicio": "Supino Reto",
+          "series": 3,
+          "reps": 10
+        },
+        {
+          "exercicio": "Agachamento",
+          "series": 4,
+          "reps": 12
+        }
+      ]
+    },
+    "maria": {
+      "treinos": [
+        {
+          "exercicio": "Rosca Direta",
+          "series": 3,
+          "reps": 10
+        }
+      ]
+    }
+  }
+}
