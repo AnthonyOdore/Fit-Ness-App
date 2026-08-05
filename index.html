@@ -14,23 +14,84 @@
             box-sizing: border-box;
             padding: 0;
         }
-        .nightMode{
-          background: #053800;
+        body{
+            
+            background-color: rgb(0, 14, 0);
+        }
+        /*.nightMode{
+          background: #010e00;
           background: linear-gradient(28deg, rgba(5, 56, 0, 1) 0%, rgba(0, 12, 13, 1) 98%) fixed;
         }
 
         .dayMode{
-          background: #045c30;
+          background: #00160b;
           background: linear-gradient(320deg, rgb(0, 73, 6) 40%, rgb(8, 107, 13) 60%) fixed;
-        }
+        }*/
 
         .oswald{
         font-family: "Oswald", sans-serif;
         font-optical-sizing: auto;
         font-weight: 100;
         font-style: normal;
-        font-size: 18px;
+        font-size: 15px;
       }
+
+      h1{
+            font-size: 25px;
+            color: rgb(29, 253, 48);
+            margin-top: 15px;
+        }
+        #geral{
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          margin: auto;
+          top: 100%;
+        }
+        .conteudo{
+            width: 92vw;
+            height: 30vh;
+            background-image: linear-gradient(#0000002c,#000000d8);
+            padding-left: 20px;
+            padding-top: 7px;
+            border-radius: 15px;
+            border: 1px solid rgb(4, 82, 1);
+            margin-top: 25px;
+            
+        }
+        .abas{
+            left: 10px;
+            width: 92vw;
+            height: 30vh;
+            content: "ffd";
+            border-radius: 15px;
+            background-size: cover;
+        }
+        .treino-txt{
+            color: chartreuse;
+             text-shadow: 0px 0px 10px rgba(88, 131, 46, 0.877);
+        }
+        .infos-txt{
+            color: white;
+            position: relative;
+            top: 70px;
+            line-height: 1.8;
+             text-shadow: 0px 0px 10px rgba(19, 24, 14, 0.877);
+        }
+        .ver-ex{
+            width: 70px;
+            height: 30px;
+            background-color: rgb(43, 241, 36);
+            border-radius: 7px;
+            border: none;
+            outline: none;
+            position: relative;
+            right: 10px;
+            bottom: -30px;
+            transform: translateX(70vw);
+            cursor: pointer;
+        }
+        
       #acesso select,#acesso option{
         font-size: 22px;
         color: #2efa7c;
@@ -46,7 +107,7 @@
         padding-top: 15px;
         color: rgb(0, 15, 3);
         font-size: 20px;
-        border-radius: 30px;
+        border-radius: 10px;
       }
       select,button, option{
         border: none;
@@ -54,7 +115,7 @@
         color: antiquewhite;
         background-color: transparent;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 15px;
         border-radius: 5px;
         appearance: none; /* Remove estilo padrão do navegador */
         -webkit-appearance: none;
@@ -161,14 +222,14 @@
         margin: auto;
         padding: 5px 10px;
         border-radius: 5px;
-        margin-top: 0;
+        margin-top: 10px;
         align-items: top;
         color: rgb(255, 255, 255);
         gap: 10px;
       }
       .li_ex{
         display: grid;
-        grid-template-columns: 4fr 4fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 4fr 1fr 2fr 1fr 1fr 1fr;
         align-items: top;
       }
       .li_gpm{
@@ -184,7 +245,7 @@
         color: antiquewhite;
       }
       .imgs-Ex{height: 0;background-color: rgb(255, 255, 255);transition: all .5s;overflow: hidden;}
-      .imgs-Ex.ativo {height: 140px;}
+      .imgs-Ex.ativo {height: 500px;}
 
       .rotacionado img {
         transform: rotate(180deg);
@@ -268,102 +329,39 @@
 </head>
 <body class="oswald dayMode">
 
-  <div id="menu">
-    <img src="icon.jpg" alt="" style="width: 40px; position: fixed; top: 5px; left: 10px; border-radius: 33%;">
-  <button onclick="mostrarAba('treino')">Treino</button>
-  <button onclick="mostrarAba('editar')">Editar</button>
-  <ul id="editLista"></ul>
-</div>
-<div id="abaTreino">
-  <!-- seu conteúdo atual -->
-</div>
-<div id="abaEditar" style="display:none">
-
-  <h3>Editar Treino</h3>
-
-  Aluno:
-  <select id="editAluno">
-    <option value="anthony">Anthony</option>
-  </select>
-
-  Treino:
-  <select id="editDia">
-    <option value="A">A</option>
-    <option value="B">B</option>
-  </select>
-
-  <br><br>
-
-  <div id="inputEditMenu">
-  <label>Exercício:</label>
-  <input id="nome">
-
-  <label>Grupo:</label>
-  <input id="grupoEx">
-
-  <label>Séries:</label>
-  <input id="series">
-
-  <label>Reps:</label>
-  <input id="reps">
-
-  <label>Descanso:</label>
-  <input id="desc" placeholder="60s">
-</div>
-  
-
-  <button onclick="addEx()">Adicionar</button>
-  <button onclick="salvarTreino()">Salvar</button>
-
-  <ul id="listaEdicao"></ul>
-
-</div>
-
-  <div class="teste">
-    <div id="div_relogio">
-        <p id="data"></p>
-        <p id="relogio"></p>
+     <h1 id="txt-titulo">Exercícios</h1>
+    
+    <div id="geral">
+        <div class="abas" style="background-image: url('bg-arnold.jpg');">
+        <div class="conteudo">
+            <h1 class="treino-txt">Peitoral</h1>
+            <h4 class="infos-txt">Treino de Peitoral<br>Tempo: 50 minutos</h4>
+            <button class="ver-ex" onclick="mostrarTreino('anthony','Segunda-feira')">Ver treino</button>
+        </div>
     </div>
-    <div id="div_tempo">
-        <p id="tempo_inicio">inicio treino: </p>
-        <p id="tempo_fim">fim treino: </p>
-        <p id="cronometro"></p>
+    
+    <div class="abas" style="background-image: url('bg-ronnie.jpg');">
+        <div class="conteudo">
+            <h1 class="treino-txt">Costas</h1>
+            <h4 class="infos-txt">Treino de Costas<br>Tempo: 50 minutos</h4>
+            <button class="ver-ex" onclick="mostrarTreino('anthony','Quarta-feira')">Ver treino</button>
+        </div>
+    </div>
+    <div class="abas" style="background-image: url('bg-legs.jpg');">
+        <div class="conteudo">
+            <h1 class="treino-txt">Pernas</h1>
+            <h4 class="infos-txt">Treino de Pernas<br>Tempo: 50 minutos</h4>
+            <button class="ver-ex" onclick="mostrarTreino('anthony','Sexta-feira')">Ver treino</button>
+        </div>
+    </div>
+    
+    </div>
+      
+ <div class="container" style="border:solid 1px white;background-color:rgba(133, 255, 129, 0.336);width:80vw; position: relative;left: 50%;transform:translateX(-50%);text-align: center;scale: 0.95;">
+        <h1 id="usuario"style="margin-left:-5%;">Carregando treino...</h1>
+        <p id="info-treino"style="margin-left:-5;"></p>
+        <div id="rotina-treinos"style="margin-left:1%;"></div>
   </div>
-
-      <h3 id="nome_aluno"></h3>
-
-<div id="acesso">
-        <label>Aluno:</label>
-        <select id="aluno" class="custom-select" >
-        <option value="selecione" disabled selected>selecione</option>
-        <option value="anthony" onclick="selecDia()">Anthony</option>
-        <option value="luciano" onclick="selecDia()">Luciano</option>
-        </select>
-        <label>Treino:</label>
-        <select id="dia" class="custom-select">
-        <option value="selecione" disabled selected>selecione</option>
-        <option value="A">A - Peito / Tríceps</option>
-        <option value="B">B - Costas / Bíceps</option>
-        <option value="C">C - Perna</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
-        <option value="F">F</option>
-        </select>
-        <br><label>Grupo:</label>
-        <select id="grupo">
-          <option value="">Todos</option>
-          <option value="Peitoral">Peito</option>
-          <option value="Tríceps">Tríceps</option>
-          <option value="Costas">Costas</option>
-        <option value="Perna">Perna</option>
-
-        </select>
-        <br>
-        
-        <button onclick="mostrarTreino()">Mostrar treino</button>
-    <!-- <button id="marcar_tempo" onclick="tempo()">iniciar</button>
-      -->
-      </div>
 
 <div id="visor_exercicio">
   <ul>
@@ -385,15 +383,18 @@
 <tbody id="tabelaTreino">
 </tbody>
 </table>
+<!--<button onclick="ativarPainel()">Ativar Painel na Tela de Bloqueio</button>-->
 
-<button onclick="ativarPainel()">Ativar Painel na Tela de Bloqueio</button>
 
 <!-- Áudio de 1 segundo de silêncio em base64 (para não precisar de arquivo externo) -->
 <audio id="silencio" loop src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
 
-<h6>versao 1.1.5</h6>
+
+<h6>versao 1.1.8</h6>
 
 <script>
+
+
 /* =========================
    🔌 SERVICE WORKER
 ========================= */
@@ -401,6 +402,79 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
 
+//window.alert(diaSemanaTexto); // Exemplo: "Quarta-feira"
+
+async function carregarTreino() {
+            try {
+                // Busca o arquivo na mesma pasta
+                const resposta = await fetch('treinos.json');
+                
+                // Converte o texto recebido em um objeto JavaScript
+                const dadosTreino = await resposta.json();
+                
+                // Renderiza os dados na tela
+                renderizarDados(dadosTreino);
+                
+            } catch (erro) {
+                console.error("Erro ao carregar o JSON:", erro);
+                document.getElementById('usuario').innerText = "Erro ao carregar o treino.";
+            }
+        }
+
+function renderizarDados(dadosTreino) {
+    document.getElementById('usuario').innerText = `Treino de ${dadosTreino.nome_usuario}`;
+    document.getElementById('info-treino').innerText = `Objetivo: ${dadosTreino.objective || dadosTreino.objetivo}`;
+
+    const containerTreinos = document.getElementById('rotina-treinos');
+    containerTreinos.innerHTML = ""; // Limpa o container
+
+    // 1. Descobre o dia da semana (0 = Domingo, 1 = Segunda, 2 = Terça, etc.)
+    const diaSemana = new Date().getDay();
+    let treinoDoDia = null;
+
+    // 2. Mapeia os dias para a sua divisão (Exemplo clássico: ABC)
+    // Adapte os dias conforme sua rotina (Ex: 1, 3, 5 para Seg, Qua, Sex)
+    if (diaSemana === 1) { // Segunda 
+        treinoDoDia = "Segunda-feira";
+    }else if (diaSemana === 2) { // 
+        treinoDoDia = "Terça-feira";
+    }else if (diaSemana === 3) { // 
+        treinoDoDia = "Quarta-feira";
+    }else if (diaSemana === 4) { // 
+        treinoDoDia = "Quinta-feira";
+    } else if (diaSemana === 5) { // 
+        treinoDoDia = "Sexta-feira";
+    }else if (diaSemana === 6) { // 
+        treinoDoDia = "Sábado";
+    } 
+
+    // 3. Verifica se há treino hoje e se ele existe no JSON
+    if (treinoDoDia && dadosTreino.divisao_treino[treinoDoDia]) {
+        const treino = dadosTreino.divisao_treino[treinoDoDia];
+        
+        let htmlTreino = `
+            <div class="treino-bloco">
+                <h2>💪 ${treinoDoDia}<small> Foco: ${treino.foco}</small></h2>
+                <ul>
+        `;
+        
+        treino.exercicios.forEach(ex => {
+            htmlTreino += `
+                <li class="exercicio">
+                    <strong>${ex.nome}</strong>: ${ex.series}x${ex.reps}
+                </li>`;
+        });
+        
+        htmlTreino += `</ul></div>`;
+        containerTreinos.innerHTML = htmlTreino;
+    } else {
+        // Se for Domingo ou um dia de descanso configurado
+        containerTreinos.innerHTML = "<h2>🛋️ Hoje é dia de descanso/off!</h2>";
+    }
+}
+
+        // Executa a função assim que a página abre
+        carregarTreino();
 /* =========================
    🔔 NOTIFICAÇÃO
 ========================= */
@@ -443,7 +517,7 @@ const estadoExercicios = {};
 /* =========================
    📦 TREINOS (SEU ORIGINAL)
 ========================= */
-const treinos = {
+/*const treinos = {
 
   luciano: {
     A: [
@@ -528,13 +602,13 @@ const treinos = {
     ]
   },
 
-};
+};*/
 
 const selectGrupo = document.getElementById("grupo");
 
-selectGrupo.addEventListener("change", () => {
+/*selectGrupo.addEventListener("change", () => {
   localStorage.setItem("grupoSelecionado", selectGrupo.value);
-});
+});*/
 window.addEventListener("load", () => {
   const grupoSalvo = localStorage.getItem("grupoSelecionado");
 
@@ -542,14 +616,10 @@ window.addEventListener("load", () => {
     document.getElementById("grupo").value = grupoSalvo;
   }
 });
-/* =========================
-   📋 MOSTRAR TREINO
-========================= */
-function mostrarTreino(){
 
-  const aluno = document.getElementById("aluno").value;
-  const dia = document.getElementById("dia").value;
-  const grupoFiltro = document.getElementById("grupo").value;
+async function mostrarTreino(aluno, dia) {
+
+  const grupoFiltro = "";
 
   const lista = document.getElementById("visor_exercicio");
   const tabela = document.getElementById("tabelaTreino");
@@ -561,51 +631,58 @@ function mostrarTreino(){
 
   const estado = {};
 
-  treinos[aluno][dia].forEach((ex, i) => {
+  // 1. CARREGA O ARQUIVO JSON
+  const resposta = await fetch('./treinos.json');
+  const treinos = await resposta.json();
 
+  // 2. ACESSA O CAMINHO CORRETO NO NOVO JSON
+  // Como o JSON agora é focado em um único usuário (Luciano), usamos 'divisao_treino[dia].exercicios'
+  const treinosDoDia = treinos.divisao_treino[dia]?.exercicios;
+
+  if (!treinosDoDia) {
+    console.error("Treino não encontrado para o dia: " + dia);
+    return;
+  }
+
+  // 3. FAZ O LOOP USANDO OS NOVOS NOMES DE PROPRIEDADES
+  treinosDoDia.forEach((ex, i) => {
+
+    // O novo JSON não tem 'grupoMuscular' por exercício, mas se você precisar no futuro, pode manter a lógica abaixo
     if(grupoFiltro && ex.grupoMuscular !== grupoFiltro){
       return;
     }
 
     estado[i] = {
-      ativo:false,
-      tempo:0,
-      descanso:tempoParaSegundos(ex.descanso)
+      ativo: false,
+      tempo: 0,
     };
 
     /* ===== TABELA ===== */
+    // Alterado: ex.exercicio -> ex.nome | ex.variacao removido (coloquei vazio "" pois não existe no seu JSON)
     tabela.innerHTML += `
       <tr>
-        <td>${ex.exercicio}</td>
-		<td>${ex.variacao}</td>
+        <td>${ex.nome}</td>
+        <td>""</td>
         <td>${ex.series}</td>
         <td>${ex.reps}</td>
-        <td>${ex.descanso}</td>
+        <td>${ex.descanso}s</td>
       </tr>
     `;
-
-    /* ===== GRUPO ===== */
-    if(ex.grupoMuscular !== ultimoGrupo){
-      lista.innerHTML += `<li class="li_gpm">${ex.grupoMuscular}</li>`;
-      ultimoGrupo = ex.grupoMuscular;
-    }
-
+    
     /* ===== LISTA ===== */
+    // Alterado: ex.exercicio -> ex.nome | ex.variacao removido das strings e dos nomes das imagens
     lista.innerHTML += `
       <li class="li_ex" onclick="expandImgsEx(${i})">
-        <span>${ex.exercicio}</span>
-        <span>${ex.variacao} </span> 
+        <span>${ex.nome}</span>
+        <span> </span> 
         <span>${ex.series}x${ex.reps}</span>
         <span id="t${i}">0s</span>
         <span id="d${i}">--</span>
         <span id="s${i}"><img src="iSetaEx.png" style="width:20px;"/></span>
       </li>
       <div class="imgs-Ex" style="width: 100%;overflow-x:scroll;">
-        <img src="${ex.exercicio}-${ex.variacao}.gif"  onerror="this.src='padrao.png'" style="height: 120px;margin-left: 10px;"/>
-        <img src="${ex.exercicio}-${ex.variacao}.png" onerror="this.src='padrao.png'" style="height: 120px;margin-left: 10px;"/>
-        <img src="musctrab-${ex.exercicio}-${ex.variacao}.png" onerror="this.src='padrao.png'" style="height: 120px;margin-left: 10px;"/>
-      
-        </div>
+        <img src="https://media.musclewiki.com/media/uploads/videos/branded/male-Machine-machine-pec-fly-side.mp4"  onerror="this.src='padrao.png'" style="width: 90vw;margin: auto;"/>
+      </div>
     `;
   });
 }
@@ -650,61 +727,6 @@ const series = document.getElementById("series");
 const reps = document.getElementById("reps");
 const desc = document.getElementById("desc");
 
-
-function addEx(){
-
-  var editDia = document.getElementById("editDia").value
-
-  let ex={
-    grupoMuscular:grupoEx.value,
-    exercicio:nome.value,
-    series:series.value,
-    reps:reps.value,
-    descanso:desc.value
-  };
-
-  if(!treinos.anthony.editDia) treinos.anthony.editDia=[];
-
-  if(!treinos.anthony[editDia]) {
-  treinos.anthony[editDia] = [];
-}
-
-treinos.anthony[editDia].push(ex);
-console.log(editDia)
-  carregarEdit();
-}
-
-function carregarEdit(){
-var diaEditDia = document.getElementById("editDia").value;
-
-  const editLista = getEditLista();
-  editLista.innerHTML = "";
-
-  treinos.anthony[diaEditDia].forEach((e,i)=>{
-    editLista.innerHTML += `
-      <li>${e.exercicio}
-      <button onclick="remover(${i})">X</button>
-      </li>`;
-  });
-}
-
-function remover(i){
-  const dia = document.getElementById("editDia").value;
-  treinos.anthony[dia].splice(i,1);
-  carregarEdit();
-}
-
-function salvarTreino(){
-  localStorage.setItem("treinos",JSON.stringify(treinos));
-  alert("Salvo");
-}
-
-/* =======================
-   MENU
-======================= */
-function getEditLista(){
-  return document.getElementById("editLista");
-}
 const alunoSel = document.getElementById("aluno");
 const diaSel = document.getElementById("dia");
 const grupoSel = document.getElementById("grupo");
@@ -730,15 +752,6 @@ function selecDia(){
   console.log(diaSel)
 }
 
-function mostrarAba(a){
-  abaTreino.style.display = a==="treino"?"block":"none";
-  abaEditar.style.display = a==="editar"?"block":"none";
-
-  if(a==="editar"){
-     carregarEdit();
-     document.getElementById("editLista").style.display = "block"
-  }
-}
 
 function expandImgsEx(i){
   const el = document.getElementsByClassName("imgs-Ex")[i];
@@ -777,16 +790,6 @@ function expandImgsEx(i){
     seta.classList.toggle("rotacionado");
   }
 }
-/* =======================
-   SALVAR FILTRO
-======================= */
-grupoSel.onchange=()=>{
-  localStorage.setItem("grupo",grupoSel.value);
-};
-
-window.onload=()=>{
-  grupoSel.value = localStorage.getItem("grupo") || "";
-};
 </script>
 </body>
 </html>
