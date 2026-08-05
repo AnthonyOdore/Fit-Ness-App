@@ -666,9 +666,10 @@ async function mostrarTreino(aluno, dia) {
         <td>${ex.series}</td>
         <td>${ex.reps}</td>
         <td>${ex.descanso}s</td>
+
       </tr>
     `;
-    
+    const link = `https://www.youtube.com/watch?v=${ex.video}`;
     /* ===== LISTA ===== */
     // Alterado: ex.exercicio -> ex.nome | ex.variacao removido das strings e dos nomes das imagens
     lista.innerHTML += `
@@ -681,7 +682,7 @@ async function mostrarTreino(aluno, dia) {
         <span id="s${i}"><img src="iSetaEx.png" style="width:20px;"/></span>
       </li>
       <div class="imgs-Ex" style="width: 100%;overflow-x:scroll;">
-        <img src="https://media.musclewiki.com/media/uploads/videos/branded/male-Machine-machine-pec-fly-side.mp4"  onerror="this.src='padrao.png'" style="width: 90vw;margin: auto;"/>
+        <td>${link}</td>
       </div>
     `;
   });
