@@ -1,0 +1,130 @@
+{
+    "nome_usuario": "Luciano",
+    "objetivo": "Hipertrofia",
+    "frequencia_semanal": 3,
+    "divisao_treino":{
+        "Segunda-feira":{
+            "foco":"Peito e Tríceps",
+            "exercicios":[
+                {
+                    "nome":"Voador",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Supino Reto Máquina",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Crossover",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Tríceps Corda",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Tríceps Francês",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Tríceps Paralela Máquina",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                }
+            ]
+        },
+        "Quarta-feira":{
+            "foco":"Costas e Bíceps",
+            "exercicios":[
+                {
+                    "nome":"Puxada fechada",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Remada Baixa",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Remada Curvada c/ Halter",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Bíceps barra ou cross",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Bíceps Scott",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Braquial",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                }
+            ]
+        },
+        "Sexta-feira":{
+            "foco":"Pernas",
+            "exercicios":[
+                {
+                    "nome":"Cadeira Extensora",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Cadeira Flexora",
+                    "series":3,
+                    "reps":"10 a 15",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Mesa Flexora",
+                    "series":3,
+                    "reps":"6 a 10",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Agachamento Hack",
+                    "series":3,
+                    "reps":"10 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Cadeira Adutora",
+                    "series":3,
+                    "reps":"8 a 12",
+                    "descanso":90            
+                },
+                {
+                    "nome":"Panturrilha sentado",
+                    "series":3,
+                    "reps":"8 a 10",
+                    "descanso":90            
+                }
+            ]
+        }
+    }
+}
