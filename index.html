@@ -244,7 +244,7 @@
         align-items: top;
         color: antiquewhite;
       }
-      .imgs-Ex{height: 0;background-color: rgb(255, 255, 255);transition: all .5s;overflow: hidden;}
+      .imgs-Ex{height: 0;background-color: rgb(255, 255, 255);transition: all .5s;overflow: hidden;position: absolute; left: 50%;transform: translateX(-50%)}
       .imgs-Ex.ativo {height: 500px;}
 
       .rotacionado img {
@@ -394,7 +394,7 @@
 
 <script>
 
-
+let treinosDoDia = [];
 /* =========================
    🔌 SERVICE WORKER
 ========================= */
@@ -637,7 +637,7 @@ async function mostrarTreino(aluno, dia) {
 
   // 2. ACESSA O CAMINHO CORRETO NO NOVO JSON
   // Como o JSON agora é focado em um único usuário (Luciano), usamos 'divisao_treino[dia].exercicios'
-  const treinosDoDia = treinos.divisao_treino[dia]?.exercicios;
+  treinosDoDia = treinos.divisao_treino[dia]?.exercicios;
 
   if (!treinosDoDia) {
     console.error("Treino não encontrado para o dia: " + dia);
@@ -681,8 +681,8 @@ async function mostrarTreino(aluno, dia) {
         <span id="d${i}">--</span>
         <span id="s${i}"><img src="iSetaEx.png" style="width:20px;"/></span>
       </li>
-      <div class="imgs-Ex" style="width: 100%;overflow-x:scroll;">
-        <td>${link}</td>
+      <div class="imgs-Ex" style="width: 90vw;overflow-x:scroll;">
+        
       </div>
     `;
   });
@@ -755,41 +755,43 @@ function selecDia(){
 
 
 function expandImgsEx(i){
-  const el = document.getElementsByClassName("imgs-Ex")[i];
-  const seta = document.getElementById("s" + i);
 
-  el.classList.toggle("ativo");
-  seta.classList.toggle("rotacionado");
+    const todos = document.getElementsByClassName("imgs-Ex");
+    const atual = todos[i];
+    const seta = document.getElementById("s"+i);
 
-  if(i>0){
-    
-    document.getElementsByClassName("imgs-Ex")[i-1].classList.toggle("ativo");
-    document.getElementById("s" + i ).classList.toggle("rotacionado");
-  }
-}
+    const ex = treinosDoDia[i];
 
-function expandImgsEx(i){
-  const todos = document.getElementsByClassName("imgs-Ex");
-  const atual = todos[i];
-  const seta = document.getElementById("s" + i);
-  const jaEstaAberto = atual.classList.contains("ativo");
+    const aberto = atual.classList.contains("ativo");
 
-  // Fecha todos
-  for(let j = 0; j < todos.length; j++){
-    todos[j].classList.remove("ativo");
-    
-    const seta = document.getElementById("s" + j);
-    if(seta){
-      seta.style = "transition: all .3s;"
-      seta.classList.remove("rotacionado");
+    // Fecha todos
+    for(let j=0; j<todos.length; j++){
+
+        todos[j].classList.remove("ativo");
+        todos[j].innerHTML = "";
+
+        document.getElementById("s"+j)?.classList.remove("rotacionado");
     }
-  }
 
-  // Se NÃO estava aberto, abre
-  if(!jaEstaAberto){
+    if(aberto) return;
+
     atual.classList.add("ativo");
-    seta.classList.toggle("rotacionado");
-  }
+    seta.classList.add("rotacionado");
+
+    if(!ex.video){
+        atual.innerHTML = "<p style='padding:20px'>Nenhum vídeo cadastrado.</p>";
+        return;
+    }
+
+    atual.innerHTML = `
+        <iframe
+            width="100%"
+            height="400"
+            src="https://www.youtube.com/embed/${ex.video}"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+    `;
 }
 </script>
 </body>
